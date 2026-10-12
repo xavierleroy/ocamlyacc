@@ -1,0 +1,1 @@
+#define OCAMLYACC_VERSION "6.0"

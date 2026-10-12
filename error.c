@@ -38,7 +38,7 @@ void no_space(void)
 
 void open_error(const char_os *filename)
 {
-    char *u8 = caml_stat_strdup_of_os(filename);
+    char *u8 = strdup_of_os(filename);
     fprintf(stderr, "%s: f - cannot open \"%s\"\n", myname, (u8 ? u8 : unknown));
     done(2);
 }

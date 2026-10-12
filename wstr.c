@@ -12,15 +12,27 @@
 /*                                                                        */
 /**************************************************************************/
 
+#include "defs.h"
+
+#ifndef _WIN32
+
+#include <string.h>
+
+char * strdup_of_os(const char_os *s)
+{
+  return strdup(s);
+}
+
+#else
+
 #include <windows.h>
 
-/* See corresponding values in runtime/win32.c */
-static int windows_unicode_enabled = WINDOWS_UNICODE;
+static int windows_unicode_enabled = 0;  /* to check */
 static int windows_unicode_strict = 1;
 
 /* Adapted from runtime/win32.c */
-int caml_win32_wide_char_to_multi_byte(const wchar_t *s, int slen,
-                                       char *out, int outlen)
+static int wide_char_to_multi_byte(const wchar_t *s, int slen,
+                                   char *out, int outlen)
 {
   int retcode;
 
@@ -42,16 +54,18 @@ int caml_win32_wide_char_to_multi_byte(const wchar_t *s, int slen,
   return retcode;
 }
 
-char* caml_stat_strdup_of_utf16(const wchar_t *s)
+char* strdup_of_os(const char_os *s)
 {
   char *out = NULL;
   int retcode;
 
-  retcode = caml_win32_wide_char_to_multi_byte(s, -1, NULL, 0);
+  retcode = wide_char_to_multi_byte(s, -1, NULL, 0);
   if (retcode >= 0) {
     out = (char *)malloc(retcode);
-    caml_win32_wide_char_to_multi_byte(s, -1, out, retcode);
+    wide_char_to_multi_byte(s, -1, out, retcode);
   }
 
   return out;
 }
+
+#endif

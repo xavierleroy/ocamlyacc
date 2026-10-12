@@ -1726,7 +1726,7 @@ print_grammar(void)
 
 void reader(void)
 {
-    virtual_input_file_name = caml_stat_strdup_of_os(input_file_name);
+    virtual_input_file_name = strdup_of_os(input_file_name);
     if (!virtual_input_file_name) no_space();
     create_symbol_table();
     read_declarations();

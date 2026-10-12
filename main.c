@@ -18,13 +18,12 @@
 #include <signal.h>
 #include <string.h>
 #include "defs.h"
+#include "version.h"
 #ifdef _WIN32
 #include <io.h>
 #else
 #include <unistd.h>
 #endif
-
-#include "caml/version.h"
 
 char lflag;
 char rflag;
@@ -172,7 +171,7 @@ void getargs(int argc, char_os **argv)
     int i;
     char_os *s;
 
-    if (argc > 0) myname = caml_stat_strdup_of_os(argv[0]);
+    if (argc > 0) myname = strdup_of_os(argv[0]);
     if (!myname) no_space();
     for (i = 1; i < argc; ++i)
     {
@@ -196,11 +195,11 @@ void getargs(int argc, char_os **argv)
 
         case 'v':
             if (!strcmp_os (argv[i], T("-version"))){
-              printf ("The OCaml parser generator, version "
-                      OCAML_VERSION_STRING "\n");
+              printf ("The ocamlyacc parser generator, version "
+                      OCAMLYACC_VERSION "\n");
               exit (0);
             }else if (!strcmp_os (argv[i], T("-vnum"))){
-              printf (OCAML_VERSION_STRING "\n");
+              printf (OCAMLYACC_VERSION "\n");
               exit (0);
             }else{
               vflag = 1;
@@ -249,7 +248,7 @@ end_of_option:;
 no_more_options:;
     if (i + 1 != argc) usage();
     input_file_name = argv[i];
-    input_file_name_disp = caml_stat_strdup_of_os(input_file_name);
+    input_file_name_disp = strdup_of_os(input_file_name);
     if (!input_file_name_disp) no_space();
     if (file_prefix == 0) {
       int len;
@@ -352,7 +351,7 @@ void create_file_names(void)
     strcpy_os(output_file_name + len, OUTPUT_SUFFIX);
 
     code_file_name = output_file_name;
-    code_file_name_disp = caml_stat_strdup_of_os(code_file_name);
+    code_file_name_disp = strdup_of_os(code_file_name);
     if (!code_file_name_disp) no_space();
 
     if (vflag)
@@ -369,7 +368,7 @@ void create_file_names(void)
         no_space();
     strcpy_os(interface_file_name, file_prefix);
     strcpy_os(interface_file_name + len, INTERFACE_SUFFIX);
-    interface_file_name_disp = caml_stat_strdup_of_os(interface_file_name);
+    interface_file_name_disp = strdup_of_os(interface_file_name);
     if (!interface_file_name_disp) no_space();
 }
 

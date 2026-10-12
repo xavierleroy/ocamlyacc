@@ -27,11 +27,50 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
-#define CAML_INTERNALS
-#include "caml/osdeps.h"
-#include "caml/misc.h"
 
-#define caml_stat_strdup strdup
+/* OS-dependent definitions */
+
+#ifndef _WIN32
+typedef char char_os;
+#define T(stringlit) stringlit
+#define fopen_os fopen
+#define main_os main
+#define mktemp_os mktemp
+#define strcmp_os strcmp
+#define strcpy_os strcpy
+#define strlen_os strlen
+#define unlink_os unlink
+#else
+typedef wchar_t char_os;
+#define T(stringlit) L##stringlit
+#define fopen_os _wfopen
+#define main_os wmain
+#define mktemp_os _wmktemp
+#define strcmp_os wcscmp
+#define strcpy_os wcscpy
+#define strlen_os wcslen
+#define unlink_os _wunlink
+#endif
+
+/* Compiler-dependent definitions */
+
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L || \
+    defined(__cplusplus)
+  #define CAMLnoret [[noreturn]]
+#elif defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
+  #define CAMLnoret _Noreturn
+#else
+  #define CAMLnoret
+#endif
+
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L || \
+    defined(__cplusplus) && __cplusplus >= 201703L
+  #define fallthrough [[fallthrough]]
+#elif __has_attribute(fallthrough)
+  #define fallthrough __attribute__ ((fallthrough))
+#else
+  #define fallthrough ((void) 0)
+#endif
 
 /*  machine-dependent definitions                              */
 /*  the following definitions are for the Tahoe                */
@@ -367,5 +406,6 @@ CAMLnoret extern void used_reserved (char *s);
 extern void verbose (void);
 extern void write_section (char const * const * section);
 CAMLnoret extern void invalid_literal(int s_lineno, char *s_line, char *s_cptr);
+extern char* strdup_of_os(const char_os *s);
 
 #endif /* YACC_DEFS_H */
