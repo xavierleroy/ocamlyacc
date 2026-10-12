@@ -27,7 +27,7 @@ char * strdup_of_os(const char_os *s)
 
 #include <windows.h>
 
-static int windows_unicode_enabled = 0;  /* to check */
+static int windows_unicode_enabled = WINDOWS_UNICODE;
 static int windows_unicode_strict = 1;
 
 /* Adapted from runtime/win32.c */
