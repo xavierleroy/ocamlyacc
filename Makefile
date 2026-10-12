@@ -8,11 +8,18 @@ OBJECTS=$(SOURCES:.c=$(EXT_OBJ))
 
 EXECUTABLE=ocamlyacc$(EXE)
 
+all: $(EXECUTABLE)
+
 $(EXECUTABLE): $(OBJECTS)
 	$(CC) $(CFLAGS) $(OUTPUTEXE)$@ $(OBJECTS)
 
 $(OBJECTS): defs.h version.h
 
+test:
+	$(MAKE) -C tests all
+
 clean:
 	rm -f $(EXECUTABLE)
 	rm -f $(OBJECTS)
+	$(MAKE) -C tests clean
+
